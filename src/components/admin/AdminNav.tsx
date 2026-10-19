@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import {
     LayoutDashboard, FileText, Tag, Users, Home, Info, Phone, Briefcase,
     Shield, Settings, LogOut, ChevronRight, ExternalLink, Navigation,
-    Sparkles, Mail, Menu, X
-Code2, } from 'lucide-react';
+    Sparkles, Mail, Menu, X, Code2, } from 'lucide-react';
 
 interface NavItem {
     label: string;
