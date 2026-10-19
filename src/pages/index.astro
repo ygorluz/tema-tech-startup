@@ -1,0 +1,24 @@
+---
+import ItechieLayout from '../layouts/ItechieLayout.astro';
+import Banner from '../components/itechie/home-two/Banner.astro';
+import IntroArea from '../components/itechie/home-two/IntroArea.astro';
+import About from '../components/itechie/home-two/About.astro';
+import SkillArea from '../components/itechie/home-two/SkillArea.astro';
+import Service from '../components/itechie/home-two/Service.astro';
+import Blog from '../components/itechie/home-two/Blog.astro';
+import Testimonial from '../components/itechie/home-two/Testimonial.astro';
+import { readData } from '../lib/readData';
+
+// Visibilidade das secoes (aba "Secoes" do admin). Default visivel; oculta so se === false.
+const sections = readData('home.json')?.sections || {};
+---
+
+<ItechieLayout>
+  <Banner />
+  {sections.showIntro !== false && <IntroArea />}
+  {sections.showAbout !== false && <About />}
+  {sections.showSkills !== false && <SkillArea />}
+  {sections.showServices !== false && <Service />}
+  {sections.showTestimonials !== false && <Testimonial />}
+  {sections.showBlog !== false && <Blog />}
+</ItechieLayout>
