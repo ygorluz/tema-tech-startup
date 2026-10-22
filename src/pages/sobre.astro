@@ -1,35 +1,76 @@
 ---
-import ItechieLayout from '../layouts/ItechieLayout.astro';
-import Breadcrumb from '../components/itechie/Breadcrumb.astro';
-import AboutSocial from '../components/itechie/home-one/About.astro';
-import ChooseArea from '../components/itechie/home-one/ChooseArea.astro';
-import Counter from '../components/itechie/home-three/Counter.astro';
-import FAQ from '../components/itechie/home-one/FAQ.astro';
-import Team from '../components/itechie/home-three/Team.astro';
-import Testimonial from '../components/itechie/about-page/Testimonial.astro';
-import SkillArea from '../components/itechie/about-page/SkillArea.astro';
-import Blog from '../components/itechie/home-one/Blog.astro';
-import CtaArea from '../components/itechie/common/CtaArea.astro';
-
+import BunzoLayout from '../layouts/BunzoLayout.astro';
+import Breadcrumb from '../components/bunzo/Breadcrumb.astro';
+import NewsletterTwo from '../components/bunzo/NewsletterTwo.astro';
 import { readData } from '../lib/readData';
-const sobreData = readData('sobre.json');
+
+const siteConfig = readData('siteConfig.json', { name: 'Arte Plural' });
+const aboutData = readData('about.json', {});
+const sobreData = readData('sobre.json', {});
+
+const pageTitle = sobreData?.hero?.title || aboutData?.title || `Sobre - ${siteConfig.name}`;
+const intro = aboutData?.intro || {};
+const introFeatures = Array.isArray(intro?.features) ? intro.features : [];
+
+const gitcmsHtml = sobreData?.content?.missionText || (typeof sobreData?.content === 'string' ? sobreData.content : '');
 ---
 
-<ItechieLayout title={sobreData.breadcrumb?.title || "Sobre Nós"}>
-  <Breadcrumb title={sobreData.breadcrumb?.title || "Sobre Nós"} subTitle={sobreData.breadcrumb?.subtitle || "Sobre Nós"} />
-  
-  <AboutSocial />
-  
-  <ChooseArea />
-  
-  <Counter />
-  
-  <FAQ />
-  
-  <Team />
-  
-  <SkillArea />
-  
-  <CtaArea />
-  
-</ItechieLayout>
+<BunzoLayout title={`${pageTitle} - ${siteConfig.name}`}>
+    <div class="about-wrapper">
+        <Breadcrumb slug={pageTitle} />
+
+        <div class="py-section container mx-auto px-4">
+            {intro.title && (
+              <div class="grid lg:grid-cols-2 gap-10 items-center mb-12">
+                  {intro.image && (
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl group">
+                        <img src={intro.image} alt={intro.title} class="w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                  )}
+                  <div class="content">
+                      <h2 class="text-4xl font-bold font-heading text-primary mb-6">{intro.title}</h2>
+                      {intro.description && <p class="text-lg text-gray-600 mb-6 leading-relaxed">{intro.description}</p>}
+                      {introFeatures.length > 0 && (
+                        <ul class="space-y-4 font-medium text-heading">
+                            {introFeatures.map((feature: string) => (
+                                <li class="flex items-center"><i class="icofont-check-circled text-primary mr-3 text-xl"></i> {feature}</li>
+                            ))}
+                        </ul>
+                      )}
+                  </div>
+              </div>
+            )}
+
+            {gitcmsHtml && (
+              <div class="prose prose-lg prose-primary max-w-none space-y-6 text-gray-600 leading-relaxed mb-12" set:html={gitcmsHtml} />
+            )}
+        </div>
+
+        {aboutData.mission && (
+          <div class="py-section bg-gray-50">
+              <div class="container mx-auto px-4">
+                  <div class="grid md:grid-cols-2 gap-10">
+                      {aboutData.mission && (
+                        <div class="bg-white p-10 rounded-2xl shadow-sm border-t-4" style={`border-top-color: var(--color-primary);`}>
+                            <h3 class="text-2xl font-bold font-heading mb-4" style={`color: var(--color-primary);`}>{aboutData.mission.title}</h3>
+                            <p class="text-gray-600 leading-relaxed">{aboutData.mission.description}</p>
+                        </div>
+                      )}
+                      {aboutData.vision && (
+                        <div class="bg-white p-10 rounded-2xl shadow-sm border-t-4" style={`border-top-color: var(--color-accent);`}>
+                            <h3 class="text-2xl font-bold font-heading mb-4" style={`color: var(--color-accent);`}>{aboutData.vision.title}</h3>
+                            <p class="text-gray-600 leading-relaxed">{aboutData.vision.description}</p>
+                        </div>
+                      )}
+                  </div>
+              </div>
+          </div>
+        )}
+
+        <div class="py-section bg-[#edf0f8]">
+            <div class="container mx-auto px-4">
+                <NewsletterTwo />
+            </div>
+        </div>
+    </div>
+</BunzoLayout>
